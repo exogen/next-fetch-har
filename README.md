@@ -199,3 +199,36 @@ const store = createStore(
   )
 );
 ```
+
+#### How do I prevent this from disabling automatic prerendering?
+
+Next.js’ [automatic prerendering](https://github.com/zeit/next.js#automatic-prerendering)
+feature is disabled if your custom `<App>` component defines a `getInitialProps`
+method. For most advanced apps, this is often inevitable, but if this library is
+the only thing causing your app to have `getInitialProps`, then you might want
+to work around it.
+
+Using the `enabled` option is not good enough to prevent the resulting `<App>`
+from having `getInitialProps`, since `ctx.fetch` needs to be defined even when
+HAR logging is disabled (for your app to work whether enabled or disabled).
+
+So, you’ll need to conditionally apply `withFetchHar` yourself and use a
+fallback wherever you access `ctx.fetch`:
+
+```js
+let CustomApp = App;
+
+if (process.env.NODE_ENV !== "production") {
+  CustomApp = withFetchHar(CustomApp);
+}
+
+export default CustomApp;
+```
+
+In pages:
+
+```js
+static async getInitialProps({ fetch = global.fetch }) {
+  const response = await fetch('/api/foo');
+}
+```

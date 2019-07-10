@@ -42,7 +42,7 @@ export default function HomePage() {
 }
 
 HomePage.getInitialProps = async ctx => {
-  const { fetch } = ctx;
+  const { fetch = global.fetch } = ctx;
 
   await fetch("https://postman-echo.com/get?foo1=bar1&foo2=bar2");
 
