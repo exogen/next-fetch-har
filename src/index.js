@@ -91,7 +91,11 @@ export function ServerHttpArchive({ har }) {
 
 export function withFetchHar(
   App,
-  { fetch: baseFetch = global.fetch, enabled = true, ...options } = {}
+  {
+    fetch: baseFetch = global.fetch,
+    enabled = process.env.NODE_ENV !== "production",
+    ...options
+  } = {}
 ) {
   const name = App.displayName || App.name || "App";
 

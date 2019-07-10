@@ -6,9 +6,9 @@ $ yarn add next-fetch-har
 
 ## Motivation
 
-When you click from page to page in a Next.js app, it’s easy to see and debug
-what API calls your `getInitialProps` methods are making: just look in your
-browser’s Network tab.
+When you click from page to page in a [Next.js](https://nextjs.org/) app, it’s
+easy to see and debug what API calls your `getInitialProps` methods are making:
+just look in your browser’s Network tab.
 
 But what about during Server Side Rendering (SSR)? In my experience, one of the
 harder aspects of debugging Next.js apps is getting visibility into what
@@ -25,7 +25,7 @@ library allow you to do!
 
 ## Usage
 
-### Step 1: Wrap your &lt;App&gt;
+#### Step 1: Wrap your &lt;App&gt;
 
 This library exports a `withFetchHar` Higher Order Component (HOC) that you can
 wrap your `<App>` component with to enable recording of server-side Fetch API
@@ -39,7 +39,19 @@ import App from "next/app";
 export default withFetchHar(App);
 ```
 
-If you have not exposed a global `fetch` polyfill on the server, you can supply
+Or with a custom `<App>`:
+
+```js
+import App from "next/app";
+
+class CustomApp extends App {
+  // Your customizations...
+}
+
+export default withFetchHar(CustomApp);
+```
+
+If you haven’t exposed a global `fetch` polyfill on the server, you can supply
 your `fetch` instance to the HOC:
 
 ```js
@@ -48,7 +60,7 @@ import fetch from "isomorphic-unfetch";
 export default withFetchHar(App, { fetch });
 ```
 
-### Step 2: Use the enhanced Fetch
+#### Step 2: Use the enhanced Fetch
 
 Instead of using a global Fetch instance, the `withFetchHar` HOC creates a
 per-request instance of Fetch that logs requests as HAR entries. It adds this
@@ -74,13 +86,50 @@ static HomePage extends React.Component {
 }
 ```
 
-### Step 3: Download the HTTP Archive
+#### Step 3: Download the HTTP Archive
 
 When `getInitialProps` is complete, the `withFetchHar` HOC adds the resulting
 HTTP Archive (HAR) to the app’s `getInitialProps` output, and renders a download
 button at the bottom of the page to access it.
 
 ![Demo](./demo.gif)
+
+### Enable in certain environments
+
+You probably don’t want to enable HAR logging for every request in production
+(or if you do, it should probably only happen for superusers). **Remember that
+HAR logs can contain sensitive information like passwords and cookie values!**
+
+The `withFetchHar` HOC has an `enabled` option you can use to conditionally
+enable HAR logging. When disabled, `ctx.fetch` will be the vanilla Fetch
+instance instead of the enhanced one.
+
+```js
+withFetchHar(App, {
+  // For safety, this is the default!
+  enabled: process.env.NODE_ENV !== "production"
+});
+```
+
+If you have multiple environments that run production builds of the app (i.e.
+a staging server), you can base this check on a different condition. For
+example:
+
+```js
+withFetchHar(App, {
+  enabled: process.env.DEPLOY_ENV !== "production"
+});
+```
+
+You can also supply a function, which will be passed the same `ctx` object
+received by `getInitialProps`. You can use this to inspect `req` (or other
+properties) for special superuser status or other conditions:
+
+```js
+withFetchHar(App, {
+  enabled: ctx => ctx.req.user.isAdmin
+});
+```
 
 ## Troubleshooting
 
@@ -107,10 +156,14 @@ You have two options:
 #### What if I don’t call fetch directly in my getInitialProps?
 
 You’ll need to find some way to pass the `ctx.fetch` instance through to your
-code that needs to call it. For example, if you make API calls inside Redux
-actions using a side-effect solution like [redux-thunk](https://github.com/reduxjs/redux-thunk),
-you can pass `ctx.fetch` to your store creation function so that it can
-be supplied to any side-effect middleware.
+code that needs to call it. It’s not possible to expose the enhanced HAR-enabled
+Fetch instance globally because it is scoped per request: it should only capture
+the requests made by each page, even if multiple are being served in parallel.
+
+For example, if you make API calls inside Redux actions using a side-effect
+solution like [redux-thunk](https://github.com/reduxjs/redux-thunk), you can
+pass `ctx.fetch` to your store creation function so that it can be supplied to
+any side-effect middleware.
 
 For redux-thunk in particular, you can use its [withExtraArgument](https://github.com/reduxjs/redux-thunk#injecting-a-custom-argument)
 feature to pass a custom object containing `fetch` and whatever else you like:
