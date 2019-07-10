@@ -14,13 +14,20 @@ just look in your browser’s Network tab.
 
 But what about during Server Side Rendering (SSR)? In my experience, one of the
 harder aspects of debugging Next.js apps is getting visibility into what
-`getInitialProps` is doing on the server — particularly what API requests and
+`getInitialProps` is doing on the server – particularly what API requests and
 responses the app is seeing.
 
+Usually, this is where good logging comes in. It’s very useful to have use an
+HTTP client that can be instrumented with detailed loggingnformation so that you
+can see what requests are being made and whether they were successful. But how
+much can you reasonably log without spamming your console? All the headers?
+Large response bodies? What about timing information, like how long it took to
+receive each response?
+
 Even if you connect to the [Node.js Inspector](https://nodejs.org/en/docs/guides/debugging-getting-started/),
-it has no equivalent to the browser’s Network tab. So what if you had some
-other way to populate the Network tab with the network activity from the server,
-as if those requests were made in the browser?
+there is no server-side equivalent to the browser’s Network tab. So what if you
+had some other way to populate the Network tab with the network activity from
+the server, as if those requests were made in the browser?
 
 That’s what [node-fetch-har](https://github.com/exogen/node-fetch-har) and this
 library allow you to do!
