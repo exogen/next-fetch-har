@@ -44,6 +44,7 @@ In `_app.js`:
 
 ```js
 import App from "next/app";
+import { withFetchHar } from "next-fetch-har";
 
 export default withFetchHar(App);
 ```
@@ -51,8 +52,6 @@ export default withFetchHar(App);
 Or with a custom `<App>`:
 
 ```js
-import App from "next/app";
-
 class CustomApp extends App {
   // Your customizations...
 }
@@ -156,7 +155,6 @@ You have two options:
 - Pass them as options to `withFetchHar`, for example:
 
   ```js
-  import App from "next/app";
   import { Response } from "node-fetch";
 
   export default withFetchHar(App, { Response });
