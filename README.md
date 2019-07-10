@@ -76,13 +76,13 @@ Fetch instance to the `ctx` object that your pages receive in `getInitialProps`.
 You should switch your calls to use this instance of Fetch.
 
 ```js
-static HomePage extends React.Component {
+class HomePage extends React.Component {
   static async getInitialProps(ctx) {
     // Get `fetch` from `ctx`.
     const { fetch } = ctx;
 
     // Example of what you might do with your API...
-    const response = await fetch('/api/foo');
+    const response = await fetch("/api/foo");
     const body = await response.json();
 
     return { value: body.foo };
