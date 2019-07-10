@@ -4,6 +4,8 @@
 $ yarn add next-fetch-har
 ```
 
+![Demo](./demo.gif)
+
 ## Motivation
 
 When you click from page to page in a [Next.js](https://nextjs.org/) app, it’s
