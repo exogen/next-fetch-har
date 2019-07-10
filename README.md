@@ -17,8 +17,8 @@ harder aspects of debugging Next.js apps is getting visibility into what
 `getInitialProps` is doing on the server – particularly what API requests and
 responses the app is seeing.
 
-Usually, this is where good logging comes in. It’s very useful to have use an
-HTTP client that can be instrumented with detailed loggingnformation so that you
+Usually, this is where good logging comes in. It’s very useful to have an HTTP
+client that can be instrumented with detailed loggingnformation so that you
 can see what requests are being made and whether they were successful. But how
 much can you reasonably log without spamming your console? All the headers?
 Large response bodies? What about timing information, like how long it took to
