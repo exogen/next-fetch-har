@@ -1,6 +1,6 @@
 {
   "name": "next-fetch-har",
-  "version": "0.1.0-beta.4",
+  "version": "0.1.0",
   "author": "Brian Beck <exogen@gmail.com>",
   "license": "MIT",
   "main": "./dist/index.cjs.js",
