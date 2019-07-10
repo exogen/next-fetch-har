@@ -18,11 +18,11 @@ harder aspects of debugging Next.js apps is getting visibility into what
 responses the app is seeing.
 
 Usually, this is where good logging comes in. It’s very useful to have an HTTP
-client that can be instrumented with detailed loggingnformation so that you
-can see what requests are being made and whether they were successful. But how
-much can you reasonably log without spamming your console? All the headers?
-Large response bodies? What about timing information, like how long it took to
-receive each response?
+client that can be instrumented with detailed logging so that you can see what
+requests are being made and whether they were successful. But how much can you
+reasonably log without spamming your console? All the headers? Large response
+bodies? What about timing information, like how long it took to receive each
+response?
 
 Even if you connect to the [Node.js Inspector](https://nodejs.org/en/docs/guides/debugging-getting-started/),
 there is no server-side equivalent to the browser’s Network tab. So what if you
