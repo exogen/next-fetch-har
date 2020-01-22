@@ -103,7 +103,8 @@ export function withFetchHar(
     static displayName = `withFetchHar(${App})`;
 
     static async getInitialProps(appContext) {
-      const { ctx } = appContext;
+      const isApp = !!appContext.Component;
+      const ctx = isApp ? appContext.ctx : appContext;
       let har = null;
       const skip = typeof enabled === "function" ? !enabled(ctx) : !enabled;
 
