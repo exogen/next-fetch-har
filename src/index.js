@@ -100,7 +100,7 @@ export function withFetchHar(
   const name = AppOrPage.displayName || AppOrPage.name || "AppOrPage";
 
   class WithFetchHar extends React.Component {
-    static displayName = `withFetchHar(${AppOrPage})`;
+    static displayName = `withFetchHar(${name})`;
 
     static async getInitialProps(appContext) {
       const isApp = !!appContext.Component;
