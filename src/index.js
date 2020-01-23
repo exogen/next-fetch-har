@@ -90,20 +90,21 @@ export function ServerHttpArchive({ har }) {
 }
 
 export function withFetchHar(
-  App,
+  AppOrPage,
   {
     fetch: baseFetch = global.fetch,
     enabled = process.env.NODE_ENV !== "production",
     ...options
   } = {}
 ) {
-  const name = App.displayName || App.name || "App";
+  const name = AppOrPage.displayName || AppOrPage.name || "AppOrPage";
 
   class WithFetchHar extends React.Component {
-    static displayName = `withFetchHar(${App})`;
+    static displayName = `withFetchHar(${AppOrPage})`;
 
     static async getInitialProps(appContext) {
-      const { ctx } = appContext;
+      const isApp = !!appContext.Component;
+      const ctx = isApp ? appContext.ctx : appContext;
       let har = null;
       const skip = typeof enabled === "function" ? !enabled(ctx) : !enabled;
 
@@ -115,7 +116,7 @@ export function withFetchHar(
         ctx.fetch = withHar(fetch, { ...options, har });
       }
 
-      const initialProps = await App.getInitialProps(appContext);
+      const initialProps = await AppOrPage.getInitialProps(appContext);
 
       return { ...initialProps, har };
     }
@@ -124,7 +125,7 @@ export function withFetchHar(
       const { har, ...props } = this.props;
       return (
         <>
-          <App {...props} />
+          <AppOrPage {...props} />
           <ServerHttpArchive har={har} />
         </>
       );
