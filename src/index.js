@@ -116,7 +116,11 @@ export function withFetchHar(
         ctx.fetch = withHar(fetch, { ...options, har });
       }
 
-      const initialProps = await AppOrPage.getInitialProps(appContext);
+      let initialProps = {};
+
+      if (AppOrPage.getInitialProps) {
+        initialProps = await AppOrPage.getInitialProps(appContext);
+      }
 
       return { ...initialProps, har };
     }

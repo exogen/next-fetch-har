@@ -68,6 +68,17 @@ import fetch from "isomorphic-unfetch";
 export default withFetchHar(App, { fetch });
 ```
 
+If you’d like to enable recording only for certain pages, the HOC also works
+with individual Page components:
+
+```js
+function MyPage() {
+  // Your page content...
+}
+
+export default withFetchHar(MyPage);
+```
+
 #### Step 2: Use the enhanced Fetch
 
 Instead of using a global Fetch instance, the `withFetchHar` HOC creates a
@@ -230,3 +241,7 @@ static async getInitialProps({ fetch = global.fetch }) {
   const response = await fetch('/api/foo');
 }
 ```
+
+If you are only interested in recording requests for certain pages, you may
+also use the `withFetchHar` only on those page components, and prerendering
+should not be affected on your other pages.
